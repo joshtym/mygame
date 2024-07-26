@@ -4,10 +4,8 @@
 class ScreenInterface
 {
 	public:
-		ScreenInterface();
-		~ScreenInterface();
-		virtual void screenDraw() = 0;
-	private:
+		virtual ~ScreenInterface() {}
+		virtual bool screenDraw() = 0;
 };
 
 #endif

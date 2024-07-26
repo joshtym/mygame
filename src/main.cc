@@ -18,16 +18,17 @@
 
 int main(int argc, char **argv)
 {
-	Display testDisplay(600, 400);
+	Display testDisplay(600, 500);
 	
 	if (!(testDisplay.initDisplay()))
 		return 1;
 	
 	while (true)
 	{
-		testDisplay.drawScreen();
+		if (!(testDisplay.drawScreen()))
+			break;
 		
-		SDL_Event event;
+		/*SDL_Event event;
 		
 		if (SDL_PollEvent(&event))
 		{
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
 				
 			if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))
 				break;
-		}
+		}*/
 	}
 	
 	return 0;

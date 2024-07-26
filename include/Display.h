@@ -8,7 +8,7 @@
 
 #include "ScreenInterface.h"
 
-enum class ErrorType {TTF_ERROR, SDL_ERROR};
+enum class ErrorType {TTF_ERROR, SDL_ERROR, IMAGE_ERROR};
 
 class Display
 {
@@ -18,14 +18,17 @@ class Display
 		~Display();
 		bool initDisplay();
 		SDL_Renderer* getRenderer();
+		SDL_Window* getWindow();
 		TTF_Font* getFont(int);
 		void renderTexture(SDL_Texture*, int, int, SDL_Rect*);
 		int getHeight();
 		int getWidth();
-		void drawScreen();
+		bool drawScreen();
+		void updateScreen(ScreenInterface*);
+		std::string getResourcePath(std::string);
 	private:
+		bool initLibraries();
 		void printOutErrorMessage(ErrorType, std::string);
-		std::string getResourcePath(std::string );
 		int width;
 		int height;
 		SDL_Window* window;

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <SDL2/SDL_image.h>
 #include "Display.h"
 #include "MainMenu.h"
 
@@ -30,26 +31,16 @@ Display::~Display()
 	for (std::map<int, TTF_Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
 		TTF_CloseFont(it->second);
 	
-	// Quit TTF and SDL
+	// Quit TTF, Image, and SDL
 	TTF_Quit();
+	IMG_Quit();
 	SDL_Quit();
 }
 
 bool Display::initDisplay()
 {
-	// Initialize the SDL libraries with video capabilities. Check for error
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_Init Error : ");
+	if (!(initLibraries()))
 		return false;
-	}
-	
-	// Initialize the font services. Check for error
-	if (TTF_Init() == -1)
-	{
-		printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_Init Error : ");
-		return false;
-	}
 	
 	// Initialize our window
 	window = SDL_CreateWindow("Game", 100, 100, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
@@ -71,6 +62,7 @@ bool Display::initDisplay()
 		return false;
 	}
 	
+	
 	currentScreen = new MainMenu(this);
 	
 	return true;
@@ -79,6 +71,11 @@ bool Display::initDisplay()
 SDL_Renderer* Display::getRenderer()
 {
 	return renderer;
+}
+
+SDL_Window* Display::getWindow()
+{
+	return window;
 }
 
 TTF_Font* Display::getFont(int fontSize)
@@ -117,14 +114,16 @@ void Display::renderTexture(SDL_Texture* texture, int x, int y, SDL_Rect* source
 	// the width and height of the renderer
 	if (source != nullptr)
 	{
+		destination.x = source->x;
+		destination.y = source->y;
 		destination.w = source->w;
 		destination.h = source->h;
 	}
 	else
 		SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
 	
-	// Render the
-	SDL_RenderCopy(renderer, texture, source, &destination);
+	// Render the texture
+	SDL_RenderCopy(renderer, texture, NULL, &destination);
 }
 
 int Display::getHeight()
@@ -139,9 +138,47 @@ int Display::getWidth()
 	return width;
 }
 
-void Display::drawScreen()
+bool Display::drawScreen()
 {
-	currentScreen->screenDraw();
+	if (currentScreen->screenDraw())
+		return true;
+	else
+		return false;
+}
+
+void Display::updateScreen(ScreenInterface* newScreen)
+{
+	delete currentScreen;
+	currentScreen = newScreen;
+}
+
+bool Display::initLibraries()
+{
+	// Initialize the SDL libraries with video capabilities. Check for error
+	if (SDL_Init(SDL_INIT_VIDEO) != 0)
+	{
+		printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_Init Error : ");
+		return false;
+	}
+	
+	// Initialize the font services. Check for error
+	if (TTF_Init() == -1)
+	{
+		printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_Init Error : ");
+		return false;
+	}
+	
+	// Initialize our image services
+	int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+	int initted = IMG_Init(imgFlags);
+	
+	if ((initted & imgFlags) != imgFlags)
+	{
+		printOutErrorMessage(ErrorType::IMAGE_ERROR, "Failed to init required jpg and png support. Error : ");
+		return false;
+	}
+	
+	return true;
 }
 
 void Display::printOutErrorMessage(ErrorType error, std::string message)
@@ -150,14 +187,16 @@ void Display::printOutErrorMessage(ErrorType error, std::string message)
 		std::cout << message << SDL_GetError() << std::endl;
 	else if (error == ErrorType::TTF_ERROR)
 		std::cout << message << TTF_GetError() << std::endl;
+	else if (error == ErrorType::IMAGE_ERROR)
+		std::cout << message << IMG_GetError() << std::endl;
 }
 
-std::string Display::getResourcePath(std::string fontName)
+std::string Display::getResourcePath(std::string resourceName)
 {
 	// Variable declarations
 	char* basePath;
 	std::string stringBasePath;
-	std::string fontPath = "";
+	std::string resourcePath = "";
 	
 	// Get the base path of the directory
 	basePath = SDL_GetBasePath();
@@ -177,7 +216,7 @@ std::string Display::getResourcePath(std::string fontName)
 	stringBasePath.append("/assets/");
 	
 	// Now assign our first font path to what we want
-	fontPath = stringBasePath + fontName;
+	resourcePath = stringBasePath + resourceName;
 	
-	return fontPath;
+	return resourcePath;
 }

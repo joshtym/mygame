@@ -1,4 +1,3 @@
-#include <iostream>
 #include "GameScreen.h"
 #include "MainMenu.h"
 
@@ -100,13 +99,13 @@ void GameScreen::initAssets()
     
     // Check for bad loading
     if (backgroundImage == NULL || paddleImage == NULL)
-        std::cout << "Error loading Image : " << IMG_GetError() << std::endl;
+        display->displayError(ErrorType::IMAGE_ERROR, "Error loading Image : ");
 
     // Load our music
     chosenMusic = Mix_LoadMUS((display->getResourcePath("ambient-wave-11-stretched.mp3")).c_str());
 
     if (chosenMusic == NULL)
-        std::cout << "Error loading Music : " << Mix_GetError() << std::endl;
+        display->displayError(ErrorType::AUDIO_ERROR, "Error loading Music : ");
         
     // Load our textures
     background = SDL_CreateTextureFromSurface(display->getRenderer(), backgroundImage);

@@ -1,4 +1,3 @@
-#include <iostream>
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_mixer.h>
 #include "Display.h"
@@ -85,7 +84,7 @@ bool Display::initDisplay()
     // Check for errors on the window initialization
     if (window == nullptr)
     {
-        printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_CreateWindow Error : ");
+        displayError(ErrorType::SDL_ERROR, "SDL_CreateWindow Error : ");
         return false;
     }
     
@@ -95,7 +94,7 @@ bool Display::initDisplay()
     // Check for nullptr and return appropriately
     if (renderer == nullptr)
     {
-        printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_CreateRenderer Error : ");
+        displayError(ErrorType::SDL_ERROR, "SDL_CreateRenderer Error : ");
         return false;
     }
     
@@ -178,6 +177,47 @@ void Display::fpsLock(int timerFps)
 }
 
 /*
+ * Public function to print out the error message using a default ErrorType and given string
+ *
+ * @param ErrorType error
+ * @param message
+*/
+void Display::displayError(ErrorType error, std::string message)
+{
+    // Some Variables
+    std::string errorMessage;
+    std::string fullMessage;
+
+    // Print correct error message
+    if (error == ErrorType::SDL_ERROR)
+    {
+        errorMessage = SDL_GetError();
+        fullMessage = message + errorMessage;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Display Error", fullMessage.c_str(), NULL);
+    }
+    else if (error == ErrorType::TTF_ERROR)
+    {
+        errorMessage = TTF_GetError();
+        fullMessage = message + errorMessage;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Error", fullMessage.c_str(), NULL);
+    }
+    else if (error == ErrorType::IMAGE_ERROR)
+    {
+        errorMessage = IMG_GetError();
+        fullMessage = message + errorMessage;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Image Error", fullMessage.c_str(), NULL);
+    }
+    else if (error == ErrorType::AUDIO_ERROR)
+    {
+        errorMessage = Mix_GetError();
+        fullMessage = message + errorMessage;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Audio Error", fullMessage.c_str(), NULL);
+    }
+    else if (error == ErrorType::PARALLAX_ERROR)
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Parallax Error", fullMessage.c_str(), NULL);
+}
+
+/*
  * Public function to return the renderer
  *
  * @return renderer
@@ -223,7 +263,7 @@ TTF_Font* Display::getFont(int fontSize)
         
         // Print out error message if new font does not initialize, else, add to map
         if (newFont == NULL)
-            printOutErrorMessage(ErrorType::TTF_ERROR, "Error opening Font : ");
+            displayError(ErrorType::TTF_ERROR, "Error opening Font : ");
         else
             fonts.insert(std::pair<int, TTF_Font*>(fontSize, newFont));
         
@@ -254,7 +294,7 @@ std::string Display::getResourcePath(std::string resourceName)
         SDL_free(basePath);
     }
     else
-        printOutErrorMessage(ErrorType::SDL_ERROR, "Error getting resource path : ");
+        displayError(ErrorType::SDL_ERROR, "Error getting resource path : ");
     
     // Get the position of our bin directory and change to assets
     size_t pos = stringBasePath.rfind("/bin");
@@ -305,14 +345,14 @@ bool Display::initLibraries()
     // Initialize the SDL libraries with video capabilities. Check for error
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
     {
-        printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_Init Error : ");
+        displayError(ErrorType::SDL_ERROR, "SDL_Init Error : ");
         return false;
     }
     
     // Initialize the font services. Check for error
     if (TTF_Init() == -1)
     {
-        printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_Init Error : ");
+        displayError(ErrorType::TTF_ERROR, "TTF_Init Error : ");
         return false;
     }
     
@@ -322,39 +362,16 @@ bool Display::initLibraries()
     
     if ((initted & imgFlags) != imgFlags)
     {
-        printOutErrorMessage(ErrorType::IMAGE_ERROR, "Failed to init required jpg and png support. Error : ");
+        displayError(ErrorType::IMAGE_ERROR, "Failed to init required jpg and png support. Error : ");
         return false;
     }
 
     // Initialize our audio services and check for error
     if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
     {
-        printOutErrorMessage(ErrorType::AUDIO_ERROR, "Failed to init support for Audio. Error: ");
+        displayError(ErrorType::AUDIO_ERROR, "Failed to init support for Audio. Error: ");
         return false;
     }
     
     return true;
-}
-
-/*
- * Private function to print out the error message using a default ErrorType and given string
- *
- * @param ErrorType error
- * @param message
-*/
-void Display::printOutErrorMessage(ErrorType error, std::string message)
-{
-    // Some Variables
-    std::string errorMessage = SDL_GetError();
-    std::string fullMessage = message + errorMessage;
-
-    // Print correct error message
-    if (error == ErrorType::SDL_ERROR)
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Display Error", fullMessage.c_str(), NULL);
-    else if (error == ErrorType::TTF_ERROR)
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Error", fullMessage.c_str(), NULL);
-    else if (error == ErrorType::IMAGE_ERROR)
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Image Error", fullMessage.c_str(), NULL);
-    else if (error == ErrorType::AUDIO_ERROR)
-        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Audio Error", fullMessage.c_str(), NULL);
 }

@@ -8,7 +8,7 @@
 
 #include "ScreenInterface.h"
 
-enum class ErrorType {TTF_ERROR, SDL_ERROR, IMAGE_ERROR, AUDIO_ERROR};
+enum class ErrorType {TTF_ERROR, SDL_ERROR, IMAGE_ERROR, AUDIO_ERROR, PARALLAX_ERROR};
 
 class Display
 {
@@ -26,6 +26,7 @@ class Display
         void updateScreen(ScreenInterface*);
         bool drawScreen();
         void fpsLock(int);
+        void displayError(ErrorType, std::string);
 
         // Function getters
         SDL_Renderer* getRenderer();
@@ -37,7 +38,6 @@ class Display
     private:
         // Private functions
         bool initLibraries();
-        void printOutErrorMessage(ErrorType, std::string);
 
         // Private variables
         int width;

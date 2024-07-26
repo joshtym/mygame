@@ -1,4 +1,3 @@
-#include <iostream>
 #include "MainMenu.h"
 #include "GameScreen.h"
 
@@ -40,7 +39,7 @@ void MainMenu::initAssets()
     
     // Check for bad loading
     if (imageOne == NULL || imageTwo == NULL || imageThree == NULL)
-        std::cout << "Error loading images : " << IMG_GetError() << std::endl;
+        display->displayError(ErrorType::IMAGE_ERROR, "Error loading images : ");
         
     // Load our backgroundTexture
     backgroundTexture = SDL_CreateTextureFromSurface(display->getRenderer(), imageOne);
@@ -166,7 +165,7 @@ bool MainMenu::screenDraw()
     SDL_RenderClear(display->getRenderer());
     
     if (!(drawParralaxBackground()))
-        std::cout << "Failed to draw the parallax backgroundTexture" << std::endl;
+        display->displayError(ErrorType::PARALLAX_ERROR, "Failed to draw Parallax Background");
     
     //display->renderTexture(backgroundTexture, -300, 0, &backgroundRect);
     display->renderTexture(titleTexture, (display->getWidth() / 2) - (titleWidth / 2), (display->getHeight() / 4), nullptr);

@@ -1,4 +1,3 @@
-#include <iostream>
 #include "LevelDraw.h"
 
 LevelDraw::LevelDraw()
@@ -27,7 +26,7 @@ void LevelDraw::init()
 
     // Check for bad loading
     if (blockImage == NULL)
-        std::cout << "Error loading Image : " << IMG_GetError() << std::endl;
+        display->displayError(ErrorType::IMAGE_ERROR, "Error loading Image : ");
 
     blockTexture = SDL_CreateTextureFromSurface(display->getRenderer(), blockImage);
 

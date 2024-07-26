@@ -1,7 +1,6 @@
 #include <iostream>
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_ttf.h>
 #include "Display.h"
+#include "MainMenu.h"
 
 Display::Display()
 {
@@ -28,7 +27,8 @@ Display::~Display()
 	window = nullptr;
 	
 	// Close our font
-	TTF_CloseFont(font);
+	for (std::map<int, TTF_Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+		TTF_CloseFont(it->second);
 	
 	// Quit TTF and SDL
 	TTF_Quit();
@@ -71,9 +71,8 @@ bool Display::initDisplay()
 		return false;
 	}
 	
-	// Initialize fonts and check for error
-	if (!(initializeFonts()))
-		return false;
+	currentScreen = new MainMenu(this);
+	
 	return true;
 }
 
@@ -82,17 +81,83 @@ SDL_Renderer* Display::getRenderer()
 	return renderer;
 }
 
-TTF_Font* Display::getFont()
+TTF_Font* Display::getFont(int fontSize)
 {
-	return font;
+	// Iterator for the map
+	std::map<int, TTF_Font*>::iterator it;
+	it = fonts.find(fontSize);
+	std::string resourcePath = getResourcePath("victor-pixel.ttf");
+	
+	// Check if the font is in the map. If it's not, create it with error checking and return the font
+	if (it != fonts.end())
+		return it->second;
+	else
+	{
+		TTF_Font* newFont = TTF_OpenFont(resourcePath.c_str(), fontSize);
+		
+		if (newFont == NULL)
+			printOutErrorMessage(ErrorType::TTF_ERROR, "Error opening Font : ");
+		else
+			fonts.insert(std::pair<int, TTF_Font*>(fontSize, newFont));
+		
+		return newFont;
+	}
+}	
+
+void Display::renderTexture(SDL_Texture* texture, int x, int y, SDL_Rect* source)
+{
+	// Variable declaration
+	SDL_Rect destination;
+	
+	// Set the location of the rectangle on the plane
+	destination.x = x;
+	destination.y = y;
+	
+	// Check if our given rectangle is the nullptr and act accordingly to assign
+	// the width and height of the renderer
+	if (source != nullptr)
+	{
+		destination.w = source->w;
+		destination.h = source->h;
+	}
+	else
+		SDL_QueryTexture(texture, NULL, NULL, &destination.w, &destination.h);
+	
+	// Render the
+	SDL_RenderCopy(renderer, texture, source, &destination);
 }
 
-bool Display::initializeFonts()
+int Display::getHeight()
+{
+	SDL_GetWindowSize(window, &width, &height);
+	return height;
+}
+
+int Display::getWidth()
+{
+	SDL_GetWindowSize(window, &width, &height);
+	return width;
+}
+
+void Display::drawScreen()
+{
+	currentScreen->screenDraw();
+}
+
+void Display::printOutErrorMessage(ErrorType error, std::string message)
+{
+	if (error == ErrorType::SDL_ERROR)
+		std::cout << message << SDL_GetError() << std::endl;
+	else if (error == ErrorType::TTF_ERROR)
+		std::cout << message << TTF_GetError() << std::endl;
+}
+
+std::string Display::getResourcePath(std::string fontName)
 {
 	// Variable declarations
 	char* basePath;
 	std::string stringBasePath;
-	std::string font1Path;
+	std::string fontPath = "";
 	
 	// Get the base path of the directory
 	basePath = SDL_GetBasePath();
@@ -104,10 +169,7 @@ bool Display::initializeFonts()
 		SDL_free(basePath);
 	}
 	else
-	{
 		printOutErrorMessage(ErrorType::SDL_ERROR, "Error getting resource path : ");
-		return false;
-	}
 	
 	// Get the position of our bin directory and change to assets
 	size_t pos = stringBasePath.rfind("/bin");
@@ -115,25 +177,7 @@ bool Display::initializeFonts()
 	stringBasePath.append("/assets/");
 	
 	// Now assign our first font path to what we want
-	font1Path = stringBasePath + "victor-pixel.ttf";
+	fontPath = stringBasePath + fontName;
 	
-	// Open up the font
-	font=TTF_OpenFont(font1Path.c_str(), 16);
-	
-	// Check for a nullptr on our font
-	if (font == nullptr)
-	{
-		printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_OpenFont Error : ");
-		return false;
-	}
-	
-	return true;
-}
-
-void Display::printOutErrorMessage(ErrorType error, std::string message)
-{
-	if (error == ErrorType::SDL_ERROR)
-		std::cout << message << SDL_GetError() << std::endl;
-	else if (error == ErrorType::TTF_ERROR)
-		std::cout << message << TTF_GetError() << std::endl;
+	return fontPath;
 }

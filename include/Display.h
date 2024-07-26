@@ -2,6 +2,11 @@
 #define DISPLAY_H
 
 #include <string>
+#include <map>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
+
+#include "ScreenInterface.h"
 
 enum class ErrorType {TTF_ERROR, SDL_ERROR};
 
@@ -13,15 +18,20 @@ class Display
 		~Display();
 		bool initDisplay();
 		SDL_Renderer* getRenderer();
-		TTF_Font* getFont();
+		TTF_Font* getFont(int);
+		void renderTexture(SDL_Texture*, int, int, SDL_Rect*);
+		int getHeight();
+		int getWidth();
+		void drawScreen();
 	private:
-		bool initializeFonts();
 		void printOutErrorMessage(ErrorType, std::string);
+		std::string getResourcePath(std::string );
 		int width;
 		int height;
 		SDL_Window* window;
 		SDL_Renderer* renderer;
-		TTF_Font* font;
+		std::map<int, TTF_Font*> fonts;
+		ScreenInterface* currentScreen;
 };
 
 #endif

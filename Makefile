@@ -4,7 +4,7 @@
 ######################################
 # Compiler
 CC = g++
-OPTS = -c -std=c++11 -Wall
+OPTS = -c -g -std=c++11 -Wall
 
 # Project name
 PROJECT = $(EXECDIR)/game

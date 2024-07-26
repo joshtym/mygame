@@ -1,5 +1,6 @@
 #include "MainMenu.h"
 #include "GameScreen.h"
+#include <iostream>
 
 /*
  * Default Constructor
@@ -97,11 +98,11 @@ bool MainMenu::screenDraw()
             return false;
                 
         // Exit the program if user hits escape
-        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))
+        if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_ESCAPE))
             return false;
             
         // Start a new game if user hits the n key
-        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_n))
+        if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_n))
         {
             display->updateScreen(new GameScreen(display));
             return true;
@@ -121,53 +122,12 @@ bool MainMenu::screenDraw()
                 backgroundRect.h = 500;
         }
     }
-    
-    int titleHeight, titleWidth;
-    int gameOption1Height, gameOption1Width;
-    int gameOption2Height, gameOption2Width;
-    
-    TTF_SizeText(display->getFont(32), "Test Game", &titleWidth, &titleHeight);
-    TTF_SizeText(display->getFont(16), "New Game", &gameOption1Width, &gameOption1Height);
-    TTF_SizeText(display->getFont(16), "Quit Game", &gameOption2Width, &gameOption2Height);
 
-    SDL_Color colour = {255, 255, 255, 255};
-    SDL_Surface* title = nullptr;
-    SDL_Surface* gameOption1 = nullptr;
-    SDL_Surface* gameOption2 = nullptr;
-    
-    if (title == nullptr)
-        title = TTF_RenderText_Solid(display->getFont(24), "Test Game", colour);
-        
-    if (gameOption1 == nullptr)
-        gameOption1 = TTF_RenderText_Solid(display->getFont(16), "New Game", colour);
-        
-    if (gameOption2 == nullptr)
-        gameOption2 = TTF_RenderText_Solid(display->getFont(16), "Quit Game", colour);
-        
-    TTF_SizeText(display->getFont(32), "Test Game", &titleWidth, &titleHeight);
-    TTF_SizeText(display->getFont(16), "New Game", &gameOption1Width, &gameOption1Height);
-    TTF_SizeText(display->getFont(16), "Quit Game", &gameOption2Width, &gameOption2Height);
-    
-    if (titleTexture == nullptr)    
-        titleTexture = SDL_CreateTextureFromSurface(display->getRenderer(), title);
-    
-    if (gameOption1Texture == nullptr)
-        gameOption1Texture = SDL_CreateTextureFromSurface(display->getRenderer(), gameOption1);
-        
-    if (gameOption2Texture == nullptr)
-        gameOption2Texture = SDL_CreateTextureFromSurface(display->getRenderer(), gameOption2);
-        
-    SDL_FreeSurface(title);
-    SDL_FreeSurface(gameOption1);
-    SDL_FreeSurface(gameOption2);
-
-    SDL_SetRenderDrawColor(display->getRenderer(), 0, 0, 0, 255);
     SDL_RenderClear(display->getRenderer());
     
     if (!(drawParralaxBackground()))
         display->displayError(ErrorType::PARALLAX_ERROR, "Failed to draw Parallax Background");
     
-    //display->renderTexture(backgroundTexture, -300, 0, &backgroundRect);
     display->renderTexture(titleTexture, (display->getWidth() / 2) - (titleWidth / 2), (display->getHeight() / 4), nullptr);
     display->renderTexture(gameOption1Texture, (display->getWidth() / 4) - (gameOption1Width / 2), (display->getHeight() / 4 * 3), nullptr);
     display->renderTexture(gameOption2Texture, (display->getWidth() / 4 * 3) - (gameOption2Width / 2), (display->getHeight() / 4 * 3), nullptr);
@@ -231,6 +191,41 @@ void MainMenu::initAssets()
     
     fps = 20;
     counter = 0;
+    
+    TTF_SizeText(display->getFont(32), "Test Game", &titleWidth, &titleHeight);
+    TTF_SizeText(display->getFont(16), "New Game", &gameOption1Width, &gameOption1Height);
+    TTF_SizeText(display->getFont(16), "Quit Game", &gameOption2Width, &gameOption2Height);
+
+    SDL_Color colour = {255, 255, 255, 255};
+    SDL_Surface* title = nullptr;
+    SDL_Surface* gameOption1 = nullptr;
+    SDL_Surface* gameOption2 = nullptr;
+    
+    if (title == nullptr)
+        title = TTF_RenderText_Solid(display->getFont(24), "Test Game", colour);
+        
+    if (gameOption1 == nullptr)
+        gameOption1 = TTF_RenderText_Solid(display->getFont(16), "New Game", colour);
+        
+    if (gameOption2 == nullptr)
+        gameOption2 = TTF_RenderText_Solid(display->getFont(16), "Quit Game", colour);
+        
+    TTF_SizeText(display->getFont(32), "Test Game", &titleWidth, &titleHeight);
+    TTF_SizeText(display->getFont(16), "New Game", &gameOption1Width, &gameOption1Height);
+    TTF_SizeText(display->getFont(16), "Quit Game", &gameOption2Width, &gameOption2Height);
+    
+    if (titleTexture == nullptr)    
+        titleTexture = SDL_CreateTextureFromSurface(display->getRenderer(), title);
+    
+    if (gameOption1Texture == nullptr)
+        gameOption1Texture = SDL_CreateTextureFromSurface(display->getRenderer(), gameOption1);
+        
+    if (gameOption2Texture == nullptr)
+        gameOption2Texture = SDL_CreateTextureFromSurface(display->getRenderer(), gameOption2);
+        
+    SDL_FreeSurface(title);
+    SDL_FreeSurface(gameOption1);
+    SDL_FreeSurface(gameOption2);
 }
 
 bool MainMenu::drawParralaxBackground()

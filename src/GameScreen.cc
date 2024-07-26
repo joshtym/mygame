@@ -56,13 +56,13 @@ bool GameScreen::screenDraw()
         if (event.type == SDL_QUIT)
             return false;
                 
-        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))
+        if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_ESCAPE))
         {
             display->updateScreen(new MainMenu(display));
             return true;
         }
 
-        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_EQUALS))
+        if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_EQUALS))
         {
             int musicLevel;
             musicLevel = Mix_VolumeMusic(-1);
@@ -79,7 +79,7 @@ bool GameScreen::screenDraw()
 
         }
 
-        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_MINUS))
+        if ((event.type == SDL_KEYUP) && (event.key.keysym.sym == SDLK_MINUS))
         {
             int musicLevel;
             musicLevel = Mix_VolumeMusic(-1);

@@ -40,5 +40,8 @@ class MainMenu : public ScreenInterface
         std::vector<SDL_Rect> frontLayer;
         int fps;
         int counter;
+        int titleHeight, titleWidth;
+        int gameOption1Height, gameOption1Width;
+        int gameOption2Height, gameOption2Width;
 };
 #endif

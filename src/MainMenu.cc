@@ -54,13 +54,9 @@ MainMenu::~MainMenu()
     SDL_DestroyTexture(gameOption1Texture);
     SDL_DestroyTexture(gameOption2Texture);
     SDL_DestroyTexture(backgroundTexture);
-    SDL_DestroyTexture(middleTexture);
-    SDL_DestroyTexture(frontTexture);
 
     // Free Surfaces
-    SDL_FreeSurface(imageOne);
-    SDL_FreeSurface(imageTwo);
-    SDL_FreeSurface(imageThree);
+    SDL_FreeSurface(backgroundImage);
 
     // Ensure everything is set to the nullptr
     display = nullptr;
@@ -68,11 +64,7 @@ MainMenu::~MainMenu()
     gameOption1Texture = nullptr;
     gameOption2Texture = nullptr;
     backgroundTexture = nullptr;
-    middleTexture = nullptr;
-    frontTexture = nullptr;
-    imageOne = nullptr;
-    imageTwo = nullptr;
-    imageThree = nullptr;
+    backgroundImage = nullptr;
 }
 
 /*
@@ -141,17 +133,15 @@ bool MainMenu::screenDraw()
 
 void MainMenu::initAssets()
 {
-    // Load our imageOne
-    imageOne = IMG_Load((display->getResourcePath("Parallax100.png")).c_str());
-    imageTwo = IMG_Load((display->getResourcePath("Parallax80.png")).c_str());
-    imageThree = IMG_Load((display->getResourcePath("Parallax60.png")).c_str());
+    // Load our backgroundImage
+    backgroundImage = IMG_Load((display->getResourcePath("Parallax100.png")).c_str());
     
     // Check for bad loading
-    if (imageOne == NULL || imageTwo == NULL || imageThree == NULL)
+    if (backgroundImage == NULL)
         display->displayError(ErrorType::IMAGE_ERROR, "Error loading images : ");
         
     // Load our backgroundTexture
-    backgroundTexture = SDL_CreateTextureFromSurface(display->getRenderer(), imageOne);
+    backgroundTexture = SDL_CreateTextureFromSurface(display->getRenderer(), backgroundImage);
     
     SDL_QueryTexture(backgroundTexture, NULL, NULL, &backgroundRect.w, &backgroundRect.h);
     
@@ -262,20 +252,6 @@ bool MainMenu::drawParralaxBackground()
     display->renderTexture(backgroundTexture, -300, 0, &backLayer[3]);
     display->renderTexture(backgroundTexture, -300, 0, &backLayer[4]);
     display->renderTexture(backgroundTexture, -300, 0, &backLayer[5]);
-    
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[0]);
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[1]);
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[2]);
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[3]);
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[4]);
-    display->renderTexture(middleTexture, -300, 0, &middleLayer[5]);
-    
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[0]);
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[1]);
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[2]);
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[3]);
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[4]);
-    display->renderTexture(frontTexture, -300, 0, &frontLayer[5]);
     
     return true;
 }

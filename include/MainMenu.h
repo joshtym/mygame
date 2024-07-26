@@ -28,12 +28,8 @@ class MainMenu : public ScreenInterface
         SDL_Texture* titleTexture;
         SDL_Texture* gameOption1Texture;
         SDL_Texture* gameOption2Texture;
-        SDL_Surface* imageOne;
-        SDL_Surface* imageTwo;
-        SDL_Surface* imageThree;
+        SDL_Surface* backgroundImage;
         SDL_Texture* backgroundTexture;
-        SDL_Texture* middleTexture;
-        SDL_Texture* frontTexture;
         SDL_Rect backgroundRect;
         std::vector<SDL_Rect> backLayer;
         std::vector<SDL_Rect> middleLayer;

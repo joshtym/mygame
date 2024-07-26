@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"inter",
+				"intersectionFromBottom"
+			],
+			[
+				"interse",
+				"intersectionFromBottom"
+			],
+			[
 				"collision",
 				"collisionDetection"
 			],
@@ -39,7 +47,7 @@
 			"file": "include/MainMenu.h",
 			"settings":
 			{
-				"buffer_size": 1077,
+				"buffer_size": 1212,
 				"line_ending": "Unix"
 			}
 		},
@@ -47,7 +55,7 @@
 			"file": "src/MainMenu.cc",
 			"settings":
 			{
-				"buffer_size": 9156,
+				"buffer_size": 8903,
 				"line_ending": "Unix"
 			}
 		},
@@ -55,7 +63,7 @@
 			"file": "include/GameScreen.h",
 			"settings":
 			{
-				"buffer_size": 1088,
+				"buffer_size": 1138,
 				"line_ending": "Unix"
 			}
 		},
@@ -63,7 +71,7 @@
 			"file": "src/GameScreen.cc",
 			"settings":
 			{
-				"buffer_size": 7074,
+				"buffer_size": 7130,
 				"line_ending": "Unix"
 			}
 		},
@@ -71,7 +79,7 @@
 			"file": "include/GameEngine.h",
 			"settings":
 			{
-				"buffer_size": 863,
+				"buffer_size": 970,
 				"line_ending": "Unix"
 			}
 		},
@@ -79,7 +87,7 @@
 			"file": "src/GameEngine.cc",
 			"settings":
 			{
-				"buffer_size": 4104,
+				"buffer_size": 6076,
 				"line_ending": "Unix"
 			}
 		},
@@ -223,6 +231,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"max",
+			"blockRender\n\n\nfps",
 			"fps\n\n\nfps",
 			"y=\"120",
 			"y=\"5\"",
@@ -238,6 +248,8 @@
 		"regex": false,
 		"replace_history":
 		[
+			"std::max",
+			"blockRenders[i]",
 			"y=\"160\"",
 			"y=\"140\"",
 			"y=\"120\"",
@@ -258,7 +270,7 @@
 	"groups":
 	[
 		{
-			"selected": 7,
+			"selected": 0,
 			"sheets":
 			[
 				{
@@ -284,7 +296,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 324.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -301,8 +313,8 @@
 						"selection":
 						[
 							[
-								27,
-								27
+								1231,
+								1231
 							]
 						],
 						"settings":
@@ -312,7 +324,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 2070.0,
+						"translation.y": 5220.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -322,15 +334,15 @@
 					"file": "include/MainMenu.h",
 					"settings":
 					{
-						"buffer_size": 1077,
+						"buffer_size": 1212,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								520,
-								520
+								1161,
+								1161
 							]
 						],
 						"settings":
@@ -350,15 +362,15 @@
 					"file": "src/MainMenu.cc",
 					"settings":
 					{
-						"buffer_size": 9156,
+						"buffer_size": 8903,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1653,
-								1653
+								3230,
+								3230
 							]
 						],
 						"settings":
@@ -368,7 +380,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 3345.0,
+						"translation.y": 3510.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -378,15 +390,15 @@
 					"file": "include/GameScreen.h",
 					"settings":
 					{
-						"buffer_size": 1088,
+						"buffer_size": 1138,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								1077,
-								1077
+								1032,
+								1032
 							]
 						],
 						"settings":
@@ -406,15 +418,15 @@
 					"file": "src/GameScreen.cc",
 					"settings":
 					{
-						"buffer_size": 7074,
+						"buffer_size": 7130,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								1836,
+								1836
 							]
 						],
 						"settings":
@@ -424,7 +436,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 495.0,
+						"translation.y": 2610.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -434,15 +446,15 @@
 					"file": "include/GameEngine.h",
 					"settings":
 					{
-						"buffer_size": 863,
+						"buffer_size": 970,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								403,
-								403
+								630,
+								630
 							]
 						],
 						"settings":
@@ -462,15 +474,15 @@
 					"file": "src/GameEngine.cc",
 					"settings":
 					{
-						"buffer_size": 4104,
+						"buffer_size": 6076,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2221,
-								2221
+								6067,
+								6067
 							]
 						],
 						"settings":
@@ -480,7 +492,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1395.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -536,7 +548,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 1020.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -581,8 +593,8 @@
 						"selection":
 						[
 							[
-								38,
-								38
+								148,
+								148
 							]
 						],
 						"settings":

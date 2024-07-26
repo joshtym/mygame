@@ -1,5 +1,6 @@
 #include "GameEngine.h"
 #include <iostream>
+#include <algorithm>
 #include <cmath>
 
 GameEngine::GameEngine()
@@ -54,27 +55,27 @@ SDL_Rect GameEngine::updatePaddle(int mouseXLocation)
 SDL_Rect GameEngine::updateBall()
 {
     if (isOnPaddle)
-        ballRenderArea.x = paddleRenderArea.x + paddleRenderArea.w / 2 - 10 - ballRenderArea.w / 2;
+        ballRenderArea.x = paddleRenderArea.x + paddleRenderArea.w / 2 - 20 - ballRenderArea.w / 2;
     else
     {
         ++xCounter;
         ++yCounter;
 
-        if (xCounter % xSpeed == 0)
+        if (xSpeed != 0 && xCounter % xSpeed == 0)
         {
             if (ballGoingLeft)
-                ballRenderArea.x -= 1;
+                ballRenderArea.x -= 2;
             else
-                ballRenderArea.x += 1;
+                ballRenderArea.x += 2;
         } 
             
 
-        if (yCounter % ySpeed == 0)
+        if (ySpeed != 0 && yCounter % ySpeed == 0)
         {
             if (ballGoingUp)
-                ballRenderArea.y -= 1;
+                ballRenderArea.y -= 2;
             else
-                ballRenderArea.y += 1;
+                ballRenderArea.y += 2;
         }
     
         collisionDetectionWalls();
@@ -89,15 +90,8 @@ void GameEngine::releaseBall()
 {
     if (isOnPaddle)
     {
-            isOnPaddle = false;
-
-        int distanceFromMiddleOfPaddle = (paddleRenderArea.x + paddleRenderArea.w / 2) - (ballRenderArea.x + ballRenderArea.w / 2);
-        double percentageFromMiddle = static_cast<double>(distanceFromMiddleOfPaddle) / static_cast<double>(paddleRenderArea.w / 2);
-        double floatXSpeed = 50 * percentageFromMiddle;
-        double floatYSpeed = 25 - 25 * percentageFromMiddle;
-
-        xSpeed = round(floatXSpeed);
-        ySpeed = round(floatYSpeed);
+        isOnPaddle = false;
+        calculateBallSpeed();
     }
 
 }
@@ -108,6 +102,22 @@ bool GameEngine::isGameOver()
         return true;
     else
         return false;
+}
+
+std::vector<SDL_Rect> GameEngine::updateLevelBlockRenders()
+{
+    return blockRenders;
+}
+
+void GameEngine::calculateBallSpeed()
+{
+    int distanceFromMiddleOfPaddle = (paddleRenderArea.x + paddleRenderArea.w / 2) - (ballRenderArea.x + ballRenderArea.w / 2);
+    double percentageFromMiddle = static_cast<double>(distanceFromMiddleOfPaddle) / static_cast<double>(paddleRenderArea.w / 2);
+
+    double floatXSpeed = 10 - 10 * abs(percentageFromMiddle);
+    ySpeed = 5;
+
+    xSpeed = round(floatXSpeed);
 }
 
 void GameEngine::collisionDetectionWalls()
@@ -137,8 +147,55 @@ void GameEngine::collisionDetectionWalls()
 
 void GameEngine::collisionDetectionPaddle()
 {
+    if (!(ballGoingUp))
+        if ((ballRenderArea.y + ballRenderArea.h) > paddleRenderArea.y)
+            if (((ballRenderArea.x + ballRenderArea.w / 2) > paddleRenderArea.x) && ((ballRenderArea.x + ballRenderArea.w / 2) < paddleRenderArea.x + paddleRenderArea.w))
+            {
+                if ((ballRenderArea.x + ballRenderArea.w / 2) <= (paddleRenderArea.x + paddleRenderArea.w / 2))
+                {
+                    ballGoingLeft = true;
+                    ballGoingUp = true;
+                    calculateBallSpeed();
+                }
+                else
+                {
+                    ballGoingLeft = false;
+                    ballGoingUp = true;
+                    calculateBallSpeed();
+                }
+            }
 }
 
 void GameEngine::collisionDetectionBricks()
 {
+    // For every block, check for collision
+    for (unsigned int i = 0; i < blockRenders.size(); ++i)
+    {
+        // Variable declarations. Produces negative value if further than block value
+        int intersectionFromRight = ballRenderArea.x - (blockRenders[i].x + blockRenders[i].w);
+        int intersectionFromLeft = blockRenders[i].x - (ballRenderArea.x + ballRenderArea.w);
+        int intersectionFromTop = blockRenders[i].y - (ballRenderArea.y + ballRenderArea.h);
+        int intersectionFromBottom = ballRenderArea.y - (blockRenders[i].y + blockRenders[i].h);
+
+        // If we've intersected with the block, call our break block function to update the ball and delete the block
+        if (intersectionFromRight < 0 && intersectionFromLeft < 0 && intersectionFromBottom < 0 && intersectionFromTop < 0)
+        {
+            breakBlock(i, intersectionFromLeft, intersectionFromRight, intersectionFromTop, intersectionFromBottom);
+            break;
+        }
+    }
+}
+
+void GameEngine::breakBlock(int index, int intersectionFromLeft, int intersectionFromRight, int intersectionFromTop, int intersectionFromBottom)
+{
+    if (std::max(std::max(intersectionFromRight, intersectionFromLeft),std::max(intersectionFromTop, intersectionFromBottom)) == intersectionFromRight)
+        ballGoingLeft = false;
+    else if (std::max(std::max(intersectionFromRight, intersectionFromLeft),std::max(intersectionFromTop, intersectionFromBottom)) == intersectionFromLeft)
+        ballGoingLeft = true;
+    else if (std::max(std::max(intersectionFromRight, intersectionFromLeft),std::max(intersectionFromTop, intersectionFromBottom)) == intersectionFromBottom)
+        ballGoingUp = false;
+    else if (std::max(std::max(intersectionFromRight, intersectionFromLeft),std::max(intersectionFromTop, intersectionFromBottom)) == intersectionFromTop)
+        ballGoingUp = true;
+
+    blockRenders.erase(blockRenders.begin() + index);
 }

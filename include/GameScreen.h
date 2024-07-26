@@ -38,6 +38,8 @@ class GameScreen : public ScreenInterface
         SDL_Rect ballImageSourceTexture;
         SDL_Rect ballImageRenderArea;
 
+        std::vector<SDL_Rect> levelBlockRenders;
+
         Mix_Music* chosenMusic;
 
         LevelDraw* testDraw;

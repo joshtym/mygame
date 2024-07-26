@@ -107,6 +107,7 @@ bool MainMenu::screenDraw()
             return true;
         }
         
+        // Handle resize event
         if (event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
         {
             if (display->getWidth() > 1200)

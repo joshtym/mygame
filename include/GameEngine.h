@@ -15,10 +15,13 @@ class GameEngine
         SDL_Rect updateBall();
         void releaseBall();
         bool isGameOver();
+        std::vector<SDL_Rect> updateLevelBlockRenders();
     private:
+        void calculateBallSpeed();
         void collisionDetectionWalls();
         void collisionDetectionPaddle();
         void collisionDetectionBricks();
+        void breakBlock(int, int, int, int, int);
 
         SDL_Rect ballRenderArea;
         SDL_Rect paddleRenderArea;

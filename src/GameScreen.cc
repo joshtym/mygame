@@ -32,6 +32,8 @@ GameScreen::~GameScreen()
     SDL_FreeSurface(backgroundImage);
     SDL_FreeSurface(paddleImage);
     Mix_FreeMusic(chosenMusic);
+
+    levelBlockRenders.clear();
     
     delete testDraw;
     delete testEngine;
@@ -48,8 +50,6 @@ bool GameScreen::screenDraw()
     SDL_Event event;
 
     int timerFps = SDL_GetTicks();
-
-    std::vector<SDL_Rect> levelBlockRenders = testDraw->getBlockRenders();
         
     if (SDL_PollEvent(&event))
     {
@@ -113,6 +113,7 @@ bool GameScreen::screenDraw()
     }
 
     ballImageRenderArea = testEngine->updateBall();
+    levelBlockRenders = testEngine->updateLevelBlockRenders();
 
     if (testEngine->isGameOver())
     {
@@ -194,7 +195,8 @@ void GameScreen::initAssets()
     ballImageRenderArea.x = paddleImageRenderArea.x + paddleImageRenderArea.w / 2 - 10 - ballImageRenderArea.w / 2;
 
     testDraw = new LevelDraw(display, "levels/level.lvl");
-    testEngine = new GameEngine(paddleImageRenderArea, ballImageRenderArea, testDraw->getBlockRenders(), display->getWidth(), display->getHeight());
+    levelBlockRenders = testDraw->getBlockRenders();
+    testEngine = new GameEngine(paddleImageRenderArea, ballImageRenderArea, levelBlockRenders, display->getWidth(), display->getHeight());
 }
 
 void GameScreen::handleResizeEvent()

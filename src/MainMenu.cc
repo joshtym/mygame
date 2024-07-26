@@ -1,107 +1,106 @@
 #include "MainMenu.h"
 #include "GameScreen.h"
 
+/*
+ * Default Constructor
+ *
+ * Default constructor to force some textures to the nullptr
+*/
 MainMenu::MainMenu()
 {
     titleTexture = nullptr;
     gameOption1Texture = nullptr;
     gameOption2Texture = nullptr;
+
+    backLayer.clear();
+    middleLayer.clear();
+    frontLayer.clear();
+
     display = nullptr;
-    initAssets();
 }
 
+/*
+ * Constructor
+ *
+ * Constructor  to initialize the display using the pointer provided as well as
+ * force textures to start as null. Clears vectors
+ *
+ * @param givenDisplay
+*/
 MainMenu::MainMenu(Display* givenDisplay)
 {
     titleTexture = nullptr;
     gameOption1Texture = nullptr;
     gameOption2Texture = nullptr;
     display = givenDisplay;
-    initAssets();
-}
 
-MainMenu::~MainMenu()
-{
-    display = nullptr;
-    SDL_DestroyTexture(titleTexture);
-    SDL_DestroyTexture(gameOption1Texture);
-    SDL_DestroyTexture(gameOption2Texture);
-    titleTexture = nullptr;
-    gameOption1Texture = nullptr;
-    gameOption2Texture = nullptr;
-}
-
-void MainMenu::initAssets()
-{
-    // Load our imageOne
-    imageOne = IMG_Load((display->getResourcePath("Parallax100.png")).c_str());
-    imageTwo = IMG_Load((display->getResourcePath("Parallax80.png")).c_str());
-    imageThree = IMG_Load((display->getResourcePath("Parallax60.png")).c_str());
-    
-    // Check for bad loading
-    if (imageOne == NULL || imageTwo == NULL || imageThree == NULL)
-        display->displayError(ErrorType::IMAGE_ERROR, "Error loading images : ");
-        
-    // Load our backgroundTexture
-    backgroundTexture = SDL_CreateTextureFromSurface(display->getRenderer(), imageOne);
-    
-    SDL_QueryTexture(backgroundTexture, NULL, NULL, &backgroundRect.w, &backgroundRect.h);
-    
-    backgroundRect.x = 0;
-    backgroundRect.y = 0;
-    
     backLayer.clear();
     middleLayer.clear();
     frontLayer.clear();
-    
-    for (int i = 0; i < 6; ++i)
-    {
-        backLayer.push_back(backgroundRect);
-        middleLayer.push_back(backgroundRect);
-        frontLayer.push_back(backgroundRect);
-    }
-    
-    backLayer[1].y = 500;
-    backLayer[2].x = 500;
-    backLayer[3].x = 500;
-    backLayer[3].y = 500;
-    backLayer[4].x = 1000;
-    backLayer[5].x = 1000;
-    backLayer[5].y = 500;
-    
-    middleLayer[1].y = 500;
-    middleLayer[2].x = 500;
-    middleLayer[3].x = 500;
-    middleLayer[3].y = 500;
-    middleLayer[4].x = 1000;
-    middleLayer[5].x = 1000;
-    middleLayer[5].y = 500;
-    
-    frontLayer[1].y = 500;
-    frontLayer[2].x = 500;
-    frontLayer[3].x = 500;
-    frontLayer[3].y = 500;
-    frontLayer[4].x = 1000;
-    frontLayer[5].x = 1000;
-    frontLayer[5].y = 500;
-    
-    fps = 4;
-    counter = 0;
+
+    initAssets();
 }
 
+/*
+ * Destructor
+ *
+ * Destroys all textures, frees all surfaces and sets everything to the nullptr
+*/
+MainMenu::~MainMenu()
+{
+    // Destroy textures
+    SDL_DestroyTexture(titleTexture);
+    SDL_DestroyTexture(gameOption1Texture);
+    SDL_DestroyTexture(gameOption2Texture);
+    SDL_DestroyTexture(backgroundTexture);
+    SDL_DestroyTexture(middleTexture);
+    SDL_DestroyTexture(frontTexture);
+
+    // Free Surfaces
+    SDL_FreeSurface(imageOne);
+    SDL_FreeSurface(imageTwo);
+    SDL_FreeSurface(imageThree);
+
+    // Ensure everything is set to the nullptr
+    display = nullptr;
+    titleTexture = nullptr;
+    gameOption1Texture = nullptr;
+    gameOption2Texture = nullptr;
+    backgroundTexture = nullptr;
+    middleTexture = nullptr;
+    frontTexture = nullptr;
+    imageOne = nullptr;
+    imageTwo = nullptr;
+    imageThree = nullptr;
+}
+
+/*
+ * Public function to draw content to the screen and track incoming events
+ *
+ * @return success or not
+*/
 bool MainMenu::screenDraw()
 {
+    // Create an SDL_Event
     SDL_Event event;
         
-    int timerFps = SDL_GetTicks();
+    // Create a starting ticker
+    int tickStart = SDL_GetTicks();
 
+    /// TODO : ADD MOUSE INTERACTION
+
+    // Poll for events and handle them accordingly
     if (SDL_PollEvent(&event))
     {
+        // Exit the program if user hits the x
         if (event.type == SDL_QUIT)
             return false;
                 
+        // Exit the program if user hits escape
         if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))
             return false;
             
+        // Start a new game if user hits the n key
         if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_n))
         {
             display->updateScreen(new GameScreen(display));
@@ -173,10 +172,64 @@ bool MainMenu::screenDraw()
     display->renderTexture(gameOption2Texture, (display->getWidth() / 4 * 3) - (gameOption2Width / 2), (display->getHeight() / 4 * 3), nullptr);
     SDL_RenderPresent(display->getRenderer());
     
-    timerFps = SDL_GetTicks() - timerFps;
-    display->fpsLock(timerFps);
+    tickStart = SDL_GetTicks() - tickStart;
+    display->fpsLock(tickStart);
 
     return true;
+}
+
+void MainMenu::initAssets()
+{
+    // Load our imageOne
+    imageOne = IMG_Load((display->getResourcePath("Parallax100.png")).c_str());
+    imageTwo = IMG_Load((display->getResourcePath("Parallax80.png")).c_str());
+    imageThree = IMG_Load((display->getResourcePath("Parallax60.png")).c_str());
+    
+    // Check for bad loading
+    if (imageOne == NULL || imageTwo == NULL || imageThree == NULL)
+        display->displayError(ErrorType::IMAGE_ERROR, "Error loading images : ");
+        
+    // Load our backgroundTexture
+    backgroundTexture = SDL_CreateTextureFromSurface(display->getRenderer(), imageOne);
+    
+    SDL_QueryTexture(backgroundTexture, NULL, NULL, &backgroundRect.w, &backgroundRect.h);
+    
+    backgroundRect.x = 0;
+    backgroundRect.y = 0;
+    
+    for (int i = 0; i < 6; ++i)
+    {
+        backLayer.push_back(backgroundRect);
+        middleLayer.push_back(backgroundRect);
+        frontLayer.push_back(backgroundRect);
+    }
+    
+    backLayer[1].y = 500;
+    backLayer[2].x = 500;
+    backLayer[3].x = 500;
+    backLayer[3].y = 500;
+    backLayer[4].x = 1000;
+    backLayer[5].x = 1000;
+    backLayer[5].y = 500;
+    
+    middleLayer[1].y = 500;
+    middleLayer[2].x = 500;
+    middleLayer[3].x = 500;
+    middleLayer[3].y = 500;
+    middleLayer[4].x = 1000;
+    middleLayer[5].x = 1000;
+    middleLayer[5].y = 500;
+    
+    frontLayer[1].y = 500;
+    frontLayer[2].x = 500;
+    frontLayer[3].x = 500;
+    frontLayer[3].y = 500;
+    frontLayer[4].x = 1000;
+    frontLayer[5].x = 1000;
+    frontLayer[5].y = 500;
+    
+    fps = 20;
+    counter = 0;
 }
 
 bool MainMenu::drawParralaxBackground()

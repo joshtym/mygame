@@ -6,6 +6,7 @@
 #include "ScreenInterface.h"
 #include "Display.h"
 #include "LevelDraw.h"
+#include "GameEngine.h"
 
 class GameScreen : public ScreenInterface
 {
@@ -17,6 +18,8 @@ class GameScreen : public ScreenInterface
     private:
         void initAssets();
         void handleResizeEvent();
+        void releaseBall();
+        void collisionDetection();
 
         Display* display;
         
@@ -38,5 +41,6 @@ class GameScreen : public ScreenInterface
         Mix_Music* chosenMusic;
 
         LevelDraw* testDraw;
+        GameEngine* testEngine;
 };
 #endif

@@ -1,4 +1,5 @@
 #include <vector>
+#include <iostream>
 #include "GameScreen.h"
 #include "MainMenu.h"
 
@@ -31,6 +32,9 @@ GameScreen::~GameScreen()
     SDL_FreeSurface(backgroundImage);
     SDL_FreeSurface(paddleImage);
     Mix_FreeMusic(chosenMusic);
+    
+    delete testDraw;
+    delete testEngine;
     
     // Set our appropriate values back to nullptrs
     display = nullptr;
@@ -102,16 +106,14 @@ bool GameScreen::screenDraw()
             handleResizeEvent();
 
         if (event.type == SDL_MOUSEMOTION)
-        {
-            paddleImageRenderArea.x = event.motion.x - paddleImageRenderArea.w / 2;
+            paddleImageRenderArea = testEngine->updatePaddle(event.motion.x);
 
-            if (paddleImageRenderArea.x < 0)
-                paddleImageRenderArea.x = 0;
-            else if ((paddleImageRenderArea.x + paddleImageRenderArea.w) > display->getWidth())
-                paddleImageRenderArea.x = display->getWidth() - paddleImageRenderArea.w;
-        }
+        if (event.type == SDL_MOUSEBUTTONUP)
+            testEngine->releaseBall();
     }
-    
+
+    ballImageRenderArea = testEngine->updateBall();
+
     testDraw->setBlockRenders(levelBlockRenders);
 
     // Music jazz
@@ -122,7 +124,9 @@ bool GameScreen::screenDraw()
 
     SDL_RenderCopy(display->getRenderer(), paddleImageTexture, &paddleImageSourceTexture, &paddleImageRenderArea);
     SDL_RenderCopy(display->getRenderer(), ballImageTexture, &ballImageSourceTexture, &ballImageRenderArea);
+
     testDraw->drawLevel();
+
     SDL_RenderPresent(display->getRenderer());
     
     timerFps = SDL_GetTicks() - timerFps;
@@ -177,12 +181,13 @@ void GameScreen::initAssets()
     paddleImageRenderArea.w = display->getWidth() / 5;
     paddleImageRenderArea.h = display->getHeight() / 20;
 
-    ballImageRenderArea.x = paddleImageRenderArea.x + paddleImageRenderArea.w / 2;
     ballImageRenderArea.w = paddleImageRenderArea.w / 10;
     ballImageRenderArea.h = ballImageRenderArea.w;
     ballImageRenderArea.y = paddleImageRenderArea.y - ballImageRenderArea.w;
+    ballImageRenderArea.x = paddleImageRenderArea.x + paddleImageRenderArea.w / 2 - 10 - ballImageRenderArea.w / 2;
 
     testDraw = new LevelDraw(display, "levels/level.lvl");
+    testEngine = new GameEngine(paddleImageRenderArea, ballImageRenderArea, testDraw->getBlockRenders(), display->getWidth(), display->getHeight());
 }
 
 void GameScreen::handleResizeEvent()

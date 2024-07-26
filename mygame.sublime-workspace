@@ -4,6 +4,14 @@
 		"selected_items":
 		[
 			[
+				"collision",
+				"collisionDetection"
+			],
+			[
+				"h",
+				"h"
+			],
+			[
 				"edgeEnd",
 				"edgeEndpoints2"
 			]
@@ -39,7 +47,7 @@
 			"file": "src/MainMenu.cc",
 			"settings":
 			{
-				"buffer_size": 7813,
+				"buffer_size": 8241,
 				"line_ending": "Unix"
 			}
 		},
@@ -47,7 +55,7 @@
 			"file": "include/GameScreen.h",
 			"settings":
 			{
-				"buffer_size": 969,
+				"buffer_size": 1200,
 				"line_ending": "Unix"
 			}
 		},
@@ -55,7 +63,23 @@
 			"file": "src/GameScreen.cc",
 			"settings":
 			{
-				"buffer_size": 6867,
+				"buffer_size": 8748,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "include/GameEngine.h",
+			"settings":
+			{
+				"buffer_size": 607,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/GameEngine.cc",
+			"settings":
+			{
+				"buffer_size": 736,
 				"line_ending": "Unix"
 			}
 		},
@@ -80,14 +104,6 @@
 			"settings":
 			{
 				"buffer_size": 391,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "assets/levels/example.lvl",
-			"settings":
-			{
-				"buffer_size": 5759,
 				"line_ending": "Unix"
 			}
 		},
@@ -129,6 +145,7 @@
 	},
 	"file_history":
 	[
+		"/home/dragon/Programming/myGame/assets/levels/example.lvl",
 		"/home/creator/Programming/mygame/assets/levels/level1.lvl",
 		"/home/creator/Programming/mygame/include/ScreenInterface.h",
 		"/home/creator/Programming/mygame/include/MainMenu.h",
@@ -240,7 +257,7 @@
 	"groups":
 	[
 		{
-			"selected": 3,
+			"selected": 5,
 			"sheets":
 			[
 				{
@@ -283,8 +300,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								305,
+								305
 							]
 						],
 						"settings":
@@ -294,7 +311,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 324.0,
+						"translation.y": 1125.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -311,8 +328,8 @@
 						"selection":
 						[
 							[
-								490,
-								490
+								1036,
+								1036
 							]
 						],
 						"settings":
@@ -332,15 +349,15 @@
 					"file": "src/MainMenu.cc",
 					"settings":
 					{
-						"buffer_size": 7813,
+						"buffer_size": 8241,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								2302,
-								2302
+								2118,
+								2118
 							]
 						],
 						"settings":
@@ -350,7 +367,7 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1080.0,
+						"translation.y": 225.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
@@ -360,15 +377,15 @@
 					"file": "include/GameScreen.h",
 					"settings":
 					{
-						"buffer_size": 969,
+						"buffer_size": 1200,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								895,
-								895
+								1077,
+								1077
 							]
 						],
 						"settings":
@@ -388,15 +405,15 @@
 					"file": "src/GameScreen.cc",
 					"settings":
 					{
-						"buffer_size": 6867,
+						"buffer_size": 8748,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3049,
-								3049
+								6926,
+								6926
 							]
 						],
 						"settings":
@@ -406,13 +423,65 @@
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 2835.0,
 						"zoom_level": 1.0
 					},
 					"type": "text"
 				},
 				{
 					"buffer": 6,
+					"file": "include/GameEngine.h",
+					"settings":
+					{
+						"buffer_size": 607,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								207,
+								207
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "src/GameEngine.cc",
+					"settings":
+					{
+						"buffer_size": 736,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								124,
+								124
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"type": "text"
+				},
+				{
+					"buffer": 8,
 					"file": "include/LevelDraw.h",
 					"settings":
 					{
@@ -440,7 +509,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 7,
+					"buffer": 9,
 					"file": "src/LevelDraw.cc",
 					"settings":
 					{
@@ -468,7 +537,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 8,
+					"buffer": 10,
 					"file": "src/main.cc",
 					"settings":
 					{
@@ -479,8 +548,8 @@
 						"selection":
 						[
 							[
-								0,
-								0
+								68,
+								68
 							]
 						],
 						"settings":
@@ -496,34 +565,7 @@
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "assets/levels/example.lvl",
-					"settings":
-					{
-						"buffer_size": 5759,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5759,
-								5759
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/Text/Plain text.tmLanguage",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 1296.0,
-						"zoom_level": 1.0
-					},
-					"type": "text"
-				},
-				{
-					"buffer": 10,
+					"buffer": 11,
 					"file": "assets/levels/level.lvl",
 					"settings":
 					{
@@ -534,8 +576,8 @@
 						"selection":
 						[
 							[
-								7987,
-								7987
+								38,
+								38
 							]
 						],
 						"settings":

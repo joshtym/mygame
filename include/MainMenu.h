@@ -22,6 +22,8 @@ class MainMenu : public ScreenInterface
         // Private functions
         void initAssets();
         bool drawParralaxBackground();
+
+        // Private variables
         Display* display;
         SDL_Texture* titleTexture;
         SDL_Texture* gameOption1Texture;

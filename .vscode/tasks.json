@@ -4,27 +4,8 @@
    "version": "2.0.0",
    "tasks": [
       {
-         "taskName": "Build",
+         "label": "Build",
          "command": "make clean; make;",
-         "type": "shell",
-         "problemMatcher":
-         {
-            "owner": "cpp",
-            "pattern":[
-               {
-                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
-                  "file": 1,
-                  "line": 2,
-                  "column": 3,
-                  "severity": 4,
-                  "message": 5
-               }
-            ]
-         }
-      },
-      {
-         "taskName": "Build and Run",
-         "command": "make clean; make; ./bin/game",
          "type": "shell",
          "group":
          {
@@ -47,7 +28,26 @@
          }
       },
       {
-         "taskName": "Run",
+         "label": "Build and Run",
+         "command": "make clean; make; ./bin/game",
+         "type": "shell",
+         "problemMatcher":
+         {
+            "owner": "cpp",
+            "pattern":[
+               {
+                  "regexp": "^(.*):(\\d+):(\\d+):\\s+(warning|error):\\s+(.*)$",
+                  "file": 1,
+                  "line": 2,
+                  "column": 3,
+                  "severity": 4,
+                  "message": 5
+               }
+            ]
+         }
+      },
+      {
+         "label": "Run",
          "command": "./bin/game",
          "type": "shell"
       }

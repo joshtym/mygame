@@ -15,6 +15,7 @@ Display::Display()
    height = 400;
    fps = 30;
    frameMS = 1000 / fps;
+   initted = false;
 }
 
 /*
@@ -32,6 +33,7 @@ Display::Display(int screenWidth, int screenHeight, int givenFps)
    height = screenHeight;
    fps = givenFps;
    frameMS = 1000 / fps;
+   initted = false;
 }
 
 /*
@@ -42,18 +44,26 @@ Display::Display(int screenWidth, int screenHeight, int givenFps)
 */
 Display::~Display()
 {
-   // Destroy the renderer and set it to the nullptr
-   SDL_DestroyRenderer(renderer);
-   renderer = nullptr;
-   
-   // Destroy the window an set it to the nullptr
-   SDL_DestroyWindow(window);
-   window = nullptr;
-   
-   // Close our font
-   for (std::map<int, TTF_Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
-      TTF_CloseFont(it->second);
-   
+   if (initted)
+   {
+      // Destroy the renderer and set it to the nullptr
+      if (renderer != NULL)
+      {
+         SDL_DestroyRenderer(renderer);
+         renderer = nullptr;
+      }
+      
+      // Destroy the window an set it to the nullptr
+      if (window != NULL)
+      {
+         SDL_DestroyWindow(window);
+         window = nullptr;
+      }
+      
+      // Close our font
+      for (std::map<int, TTF_Font*>::const_iterator it = fonts.begin(); it != fonts.end(); ++it)
+         TTF_CloseFont(it->second);
+   }
    // Quit TTF, Image, and SDL
    TTF_Quit();
    IMG_Quit();
@@ -72,41 +82,45 @@ Display::~Display()
 *
 * Initialize the libraries, window and renderer. Hide cursor and initizlie starting screen
 *
-*@return Successfully Initialized
+* @return Successfully Initialized
 */
 bool Display::initDisplay()
 {
-   // Init libraries and ensure that it was properly initted
-   if (!(initLibraries()))
-      return false;
-   
-   // Initialize our window
-   window = SDL_CreateWindow("Game", 100, 100, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
-   
-   // Check for errors on the window initialization
-   if (window == nullptr)
+   if (!initted)
    {
-      displayError(ErrorType::SDL_ERROR, "SDL_CreateWindow Error : ");
-      return false;
-   }
-   
-   // Initialize our renderer
-   renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-   
-   // Check for nullptr and return appropriately
-   if (renderer == nullptr)
-   {
-      displayError(ErrorType::SDL_ERROR, "SDL_CreateRenderer Error : ");
-      return false;
-   }
-   
-   // Disable the cursor
-   SDL_ShowCursor(SDL_DISABLE);
+      // Init libraries and ensure that it was properly initted
+      if (!(initLibraries()))
+         return false;
+      
+      // Initialize our window
+      window = SDL_CreateWindow("Game", 100, 100, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+      
+      // Check for errors on the window initialization
+      if (window == nullptr)
+      {
+         displayError(ErrorType::SDL_ERROR, "SDL_CreateWindow Error : ");
+         return false;
+      }
+      
+      // Initialize our renderer
+      renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+      
+      // Check for nullptr and return appropriately
+      if (renderer == nullptr)
+      {
+         displayError(ErrorType::SDL_ERROR, "SDL_CreateRenderer Error : ");
+         return false;
+      }
+      
+      // Disable the cursor
+      SDL_ShowCursor(SDL_DISABLE);
 
-   // Initialize to the main menu
-   currentScreen = new MainMenu(this);
-   
-   return true;
+      // Initialize to the main menu
+      currentScreen = new MainMenu(this);
+      
+      initted = true;
+   }
+   return initted;
 }
 
 /*

@@ -44,6 +44,7 @@ class Display
       int height;
       int fps;
       int frameMS;
+      bool initted;
       SDL_Window* window;
       SDL_Renderer* renderer;
       std::map<int, TTF_Font*> fonts;

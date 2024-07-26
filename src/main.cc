@@ -5,15 +5,15 @@
 int main(int argc, char **argv)
 {
    // Init display
-   Display testDisplay(800, 600, 1000);
+   Display myDisplay(800, 600, 1000);
    
    // check for the display to be initted
-   if (!(testDisplay.initDisplay()))
+   if (!(myDisplay.initDisplay()))
       return 1;
    
    // Draw screen
    while (true)
-      if (!(testDisplay.drawScreen()))
+      if (!(myDisplay.drawScreen()))
          break;
    
    return 0;

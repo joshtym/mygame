@@ -114,6 +114,13 @@ bool GameScreen::screenDraw()
 
     ballImageRenderArea = testEngine->updateBall();
 
+    if (testEngine->isGameOver())
+    {
+        display->updateScreen(new MainMenu(display));
+        return true;
+    }
+
+
     testDraw->setBlockRenders(levelBlockRenders);
 
     // Music jazz

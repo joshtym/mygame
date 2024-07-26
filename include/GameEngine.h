@@ -14,6 +14,7 @@ class GameEngine
         SDL_Rect updatePaddle(int);
         SDL_Rect updateBall();
         void releaseBall();
+        bool isGameOver();
     private:
         void collisionDetectionWalls();
         void collisionDetectionPaddle();
@@ -26,7 +27,11 @@ class GameEngine
         int screenWidth;
         int screenHeight;
         bool isOnPaddle;
-        int motionX;
-        int motionY;
+        bool ballGoingLeft;
+        bool ballGoingUp;
+        int xSpeed;
+        int ySpeed;
+        int xCounter;
+        int yCounter;
 };
 #endif

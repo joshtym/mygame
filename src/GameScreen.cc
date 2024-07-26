@@ -1,6 +1,6 @@
 #include "GameScreen.h"
 #include "MainMenu.h"
-
+#include <iostream>
 GameScreen::GameScreen()
 {
     display = nullptr;
@@ -52,6 +52,40 @@ bool GameScreen::screenDraw()
             display->updateScreen(new MainMenu(display));
             return true;
         }
+
+        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_EQUALS))
+        {
+            int musicLevel;
+            musicLevel = Mix_VolumeMusic(-1);
+
+            if (musicLevel != MIX_MAX_VOLUME)
+            {
+                musicLevel += 2;
+
+                if (musicLevel > MIX_MAX_VOLUME)
+                    musicLevel = MIX_MAX_VOLUME;
+
+                Mix_VolumeMusic(musicLevel);
+            }
+
+        }
+
+        if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_MINUS))
+        {
+            int musicLevel;
+            musicLevel = Mix_VolumeMusic(-1);
+
+            if (musicLevel != 0)
+            {
+                musicLevel -= 2;
+
+                if (musicLevel < 0)
+                    musicLevel = 0;
+
+                Mix_VolumeMusic(musicLevel);
+            }
+
+        }
         
         if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_b))
             paddleImageRenderArea.w = paddleImageRenderArea.w * 3 / 2;
@@ -78,8 +112,6 @@ bool GameScreen::screenDraw()
         Mix_PlayMusic(chosenMusic, -1);
     
     SDL_RenderClear(display->getRenderer());
-    
-    //SDL_RenderCopy(display->getRenderer(), background, &backgroundClip, &backgroundDest);
 
     SDL_RenderCopy(display->getRenderer(), paddleImageTexture, &paddleImageSourceTexture, &paddleImageRenderArea);
     testDraw->drawLevel();

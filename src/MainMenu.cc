@@ -1,6 +1,6 @@
+#include <iostream>
 #include "MainMenu.h"
 #include "GameScreen.h"
-#include <iostream>
 
 MainMenu::MainMenu()
 {

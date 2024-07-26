@@ -1,6 +1,6 @@
+#include <iostream>
 #include "GameScreen.h"
 #include "MainMenu.h"
-#include <iostream>
 
 GameScreen::GameScreen()
 {
@@ -28,6 +28,7 @@ GameScreen::~GameScreen()
     // Free our image surface
     SDL_FreeSurface(backgroundImage);
     SDL_FreeSurface(paddleImage);
+    Mix_FreeMusic(chosenMusic);
     
     // Set our appropriate values back to nullptrs
     display = nullptr;
@@ -73,10 +74,16 @@ bool GameScreen::screenDraw()
         }
     }
     
+    // Music jazz
+    if (Mix_PlayingMusic() == 0)
+        Mix_PlayMusic(chosenMusic, -1);
+    
     SDL_RenderClear(display->getRenderer());
     
-    SDL_RenderCopy(display->getRenderer(), background, &backgroundClip, &backgroundDest);
+    //SDL_RenderCopy(display->getRenderer(), background, &backgroundClip, &backgroundDest);
+
     SDL_RenderCopy(display->getRenderer(), paddleImageTexture, &paddleImageSourceTexture, &paddleImageRenderArea);
+    testDraw->drawLevel();
     SDL_RenderPresent(display->getRenderer());
     
     timerFps = SDL_GetTicks() - timerFps;
@@ -94,6 +101,12 @@ void GameScreen::initAssets()
     // Check for bad loading
     if (backgroundImage == NULL || paddleImage == NULL)
         std::cout << "Error loading Image : " << IMG_GetError() << std::endl;
+
+    // Load our music
+    chosenMusic = Mix_LoadMUS((display->getResourcePath("ambient-wave-11-stretched.mp3")).c_str());
+
+    if (chosenMusic == NULL)
+        std::cout << "Error loading Music : " << Mix_GetError() << std::endl;
         
     // Load our textures
     background = SDL_CreateTextureFromSurface(display->getRenderer(), backgroundImage);
@@ -117,6 +130,8 @@ void GameScreen::initAssets()
     paddleImageRenderArea.y = display->getHeight() - display->getHeight() / 20;
     paddleImageRenderArea.w = display->getWidth() / 5;
     paddleImageRenderArea.h = display->getHeight() / 20;
+
+    testDraw = new LevelDraw(display, "levels/example.lvl");
 }
 
 void GameScreen::handleResizeEvent()

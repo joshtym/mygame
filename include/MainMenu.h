@@ -1,10 +1,10 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
-#include "ScreenInterface.h"
-#include "Display.h"
 #include <SDL2/SDL_image.h>
 #include <vector>
+#include "ScreenInterface.h"
+#include "Display.h"
 
 class MainMenu : public ScreenInterface
 {

@@ -16,7 +16,7 @@ SRCDIR = src
 INCDIR = include
 
 # Libraries
-LIBS = -L /usr/lib -lSDL2 -lSDL2_image -lSDL2_ttf
+LIBS = -L /usr/lib -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 INC = -I /usr/include -I $(INCDIR)
 
 # Files and folders

@@ -1,8 +1,14 @@
 #include <iostream>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 #include "Display.h"
 #include "MainMenu.h"
 
+/*
+ * Default Constructor
+ *
+ * Initialize default width, height and fps values
+*/
 Display::Display()
 {
     // Assign the width and height of the window
@@ -11,14 +17,28 @@ Display::Display()
     fps = 1000;
 }
 
-Display::Display(int screenWidth, int screenHeight)
+/*
+ * Constructor
+ *
+ * Take parameters for display width, height and fps and assign
+ *
+ * @param screenWidth
+ * @param screenHeight
+*/
+Display::Display(int screenWidth, int screenHeight, int givenFps)
 {
     // Assign the width and height of the window
     width = screenWidth;
     height = screenHeight;
-    fps = 1000;
+    fps = givenFps;
 }
 
+/*
+ * Destructor
+ *
+ * Destroy the render, window and assign to nullptr. Close all fonts and quit
+ * all secondary services
+*/
 Display::~Display()
 {
     // Destroy the renderer and set it to the nullptr
@@ -36,16 +56,30 @@ Display::~Display()
     // Quit TTF, Image, and SDL
     TTF_Quit();
     IMG_Quit();
+    Mix_Quit();
     SDL_Quit();
 }
 
+
+/*
+ * PUBLIC FUNCTIONS
+*/
+
+
+/*
+ * Public function to initialize the display
+ *
+ * Initialize the libraries, window and renderer. Hide cursor and initizlie starting screen
+ *
+ *@return Successfully Initialized
+*/
 bool Display::initDisplay()
 {
+    // Init libraries and ensure that it was properly initted
     if (!(initLibraries()))
         return false;
     
     // Initialize our window
-    //window = SDL_CreateWindow("Game", 100, 100, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_RESIZABLE);
     window = SDL_CreateWindow("Game", 100, 100, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
     
     // Check for errors on the window initialization
@@ -65,45 +99,23 @@ bool Display::initDisplay()
         return false;
     }
     
-    
+    // Disable the cursor
+    SDL_ShowCursor(SDL_DISABLE);
+
+    // Initialize to the main menu
     currentScreen = new MainMenu(this);
     
     return true;
 }
 
-SDL_Renderer* Display::getRenderer()
-{
-    return renderer;
-}
-
-SDL_Window* Display::getWindow()
-{
-    return window;
-}
-
-TTF_Font* Display::getFont(int fontSize)
-{
-    // Iterator for the map
-    std::map<int, TTF_Font*>::iterator it;
-    it = fonts.find(fontSize);
-    std::string resourcePath = getResourcePath("victor-pixel.ttf");
-    
-    // Check if the font is in the map. If it's not, create it with error checking and return the font
-    if (it != fonts.end())
-        return it->second;
-    else
-    {
-        TTF_Font* newFont = TTF_OpenFont(resourcePath.c_str(), fontSize);
-        
-        if (newFont == NULL)
-            printOutErrorMessage(ErrorType::TTF_ERROR, "Error opening Font : ");
-        else
-            fonts.insert(std::pair<int, TTF_Font*>(fontSize, newFont));
-        
-        return newFont;
-    }
-}    
-
+/*
+ * Public function that renders a texture with given parameters
+ *
+ * @param texture
+ * @param x
+ * @param y
+ * @param source
+*/
 void Display::renderTexture(SDL_Texture* texture, int x, int y, SDL_Rect* source)
 {
     // Variable declaration
@@ -129,18 +141,22 @@ void Display::renderTexture(SDL_Texture* texture, int x, int y, SDL_Rect* source
     SDL_RenderCopy(renderer, texture, NULL, &destination);
 }
 
-int Display::getHeight()
+/*
+ * Public function to update the screen to the new screen
+ *
+ * @param newScreen
+*/
+void Display::updateScreen(ScreenInterface* newScreen)
 {
-    SDL_GetWindowSize(window, &width, &height);
-    return height;
+    delete currentScreen;
+    currentScreen = newScreen;
 }
 
-int Display::getWidth()
-{
-    SDL_GetWindowSize(window, &width, &height);
-    return width;
-}
-
+/*
+ * Public function to drawn the current screen
+ *
+ * @return successful or not
+*/
 bool Display::drawScreen()
 {
     if (currentScreen->screenDraw())
@@ -149,51 +165,78 @@ bool Display::drawScreen()
         return false;
 }
 
-void Display::updateScreen(ScreenInterface* newScreen)
+/*
+ * Public function to ensure fps lock to manage computer resources
+ *
+ * @param timerFps
+*/
+void Display::fpsLock(int timerFps)
 {
-    delete currentScreen;
-    currentScreen = newScreen;
+    // Add a delay depending on the fps counter
+    if (timerFps < (1000 / fps))
+        SDL_Delay((1000/ fps) - timerFps);
 }
 
-bool Display::initLibraries()
+/*
+ * Public function to return the renderer
+ *
+ * @return renderer
+*/
+SDL_Renderer* Display::getRenderer()
 {
-    // Initialize the SDL libraries with video capabilities. Check for error
-    if (SDL_Init(SDL_INIT_VIDEO) != 0)
-    {
-        printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_Init Error : ");
-        return false;
-    }
-    
-    // Initialize the font services. Check for error
-    if (TTF_Init() == -1)
-    {
-        printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_Init Error : ");
-        return false;
-    }
-    
-    // Initialize our image services
-    int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
-    int initted = IMG_Init(imgFlags);
-    
-    if ((initted & imgFlags) != imgFlags)
-    {
-        printOutErrorMessage(ErrorType::IMAGE_ERROR, "Failed to init required jpg and png support. Error : ");
-        return false;
-    }
-    
-    return true;
+    return renderer;
 }
 
-void Display::printOutErrorMessage(ErrorType error, std::string message)
+/*
+ * Public function to return the window
+ *
+ * @return window
+*/
+SDL_Window* Display::getWindow()
 {
-    if (error == ErrorType::SDL_ERROR)
-        std::cout << message << SDL_GetError() << std::endl;
-    else if (error == ErrorType::TTF_ERROR)
-        std::cout << message << TTF_GetError() << std::endl;
-    else if (error == ErrorType::IMAGE_ERROR)
-        std::cout << message << IMG_GetError() << std::endl;
+    return window;
 }
 
+/*
+ * Public function to return the font with the correct size
+ *
+ * @param fontSize
+ * @return font with size fontSize
+*/
+TTF_Font* Display::getFont(int fontSize)
+{
+    // Get a resource path
+    std::string resourcePath = getResourcePath("victor-pixel.ttf");
+
+    // Iterator for the map
+    std::map<int, TTF_Font*>::iterator it;
+
+    // Try and find the current font
+    it = fonts.find(fontSize);
+    
+    // Check if the font is in the map. If it's not, create it with error checking and return the font
+    if (it != fonts.end())
+        return it->second;
+    else
+    {
+        TTF_Font* newFont = TTF_OpenFont(resourcePath.c_str(), fontSize);
+        
+        // Print out error message if new font does not initialize, else, add to map
+        if (newFont == NULL)
+            printOutErrorMessage(ErrorType::TTF_ERROR, "Error opening Font : ");
+        else
+            fonts.insert(std::pair<int, TTF_Font*>(fontSize, newFont));
+        
+        return newFont;
+    }
+}    
+
+/*
+ * Public function to get the resource path in the assets directory
+ *
+ * @param resourceName
+ * @return resourcePath
+*/
 std::string Display::getResourcePath(std::string resourceName)
 {
     // Variable declarations
@@ -224,8 +267,90 @@ std::string Display::getResourcePath(std::string resourceName)
     return resourcePath;
 }
 
-void Display::fpsLock(int timerFps)
+/*
+ * Public function to get the height of the display
+ *
+ * @return height
+*/
+int Display::getHeight()
 {
-    if (timerFps < (1000 / fps))
-        SDL_Delay((1000/ fps) - timerFps);
+    SDL_GetWindowSize(window, &width, &height);
+    return height;
+}
+
+/*
+ * Public function to get the width of the display
+ *
+ * @return width
+*/
+int Display::getWidth()
+{
+    SDL_GetWindowSize(window, &width, &height);
+    return width;
+}
+
+
+/*
+ * PRIVATE FUNCTIONS
+*/
+
+
+/*
+ * Private function to initialize all libraries such as SDL, TTF, Mix and IMG
+ *
+ * @return success or not
+*/
+bool Display::initLibraries()
+{
+    // Initialize the SDL libraries with video capabilities. Check for error
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0)
+    {
+        printOutErrorMessage(ErrorType::SDL_ERROR, "SDL_Init Error : ");
+        return false;
+    }
+    
+    // Initialize the font services. Check for error
+    if (TTF_Init() == -1)
+    {
+        printOutErrorMessage(ErrorType::TTF_ERROR, "TTF_Init Error : ");
+        return false;
+    }
+    
+    // Initialize our image services then check for error
+    int imgFlags = IMG_INIT_JPG | IMG_INIT_PNG;
+    int initted = IMG_Init(imgFlags);
+    
+    if ((initted & imgFlags) != imgFlags)
+    {
+        printOutErrorMessage(ErrorType::IMAGE_ERROR, "Failed to init required jpg and png support. Error : ");
+        return false;
+    }
+
+    // Initialize our audio services and check for error
+    if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+    {
+        printOutErrorMessage(ErrorType::AUDIO_ERROR, "Failed to init support for Audio. Error: ");
+        return false;
+    }
+    
+    return true;
+}
+
+/*
+ * Private function to print out the error message using a default ErrorType and given string
+ *
+ * @param ErrorType error
+ * @param message
+*/
+void Display::printOutErrorMessage(ErrorType error, std::string message)
+{
+    // Print correct error message
+    if (error == ErrorType::SDL_ERROR)
+        std::cout << message << SDL_GetError() << std::endl;
+    else if (error == ErrorType::TTF_ERROR)
+        std::cout << message << TTF_GetError() << std::endl;
+    else if (error == ErrorType::IMAGE_ERROR)
+        std::cout << message << IMG_GetError() << std::endl;
+    else if (error == ErrorType::AUDIO_ERROR)
+        std::cout << message << Mix_GetError() << std::endl;
 }

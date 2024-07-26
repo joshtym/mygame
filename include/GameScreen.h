@@ -10,34 +10,34 @@
 
 class GameScreen : public ScreenInterface
 {
-    public:
-        GameScreen();
-        GameScreen(Display*);
-        ~GameScreen();
-        bool screenDraw();
-    private:
-        void initAssets();
-        void handleResizeEvent();
-        void releaseBall();
-        void collisionDetection();
+   public:
+      GameScreen();
+      GameScreen(Display*);
+      ~GameScreen();
+      bool screenDraw();
+   private:
+      void initAssets();
+      void handleResizeEvent();
+      void releaseBall();
+      void collisionDetection();
 
-        Display* display;
-        
-        SDL_Surface* paddleImage;
-        SDL_Texture* paddleImageTexture;
-        SDL_Rect paddleImageSourceTexture;
-        SDL_Rect paddleImageRenderArea;
+      Display* display;
+      
+      SDL_Surface* paddleImage;
+      SDL_Texture* paddleImageTexture;
+      SDL_Rect paddleImageSourceTexture;
+      SDL_Rect paddleImageRenderArea;
 
-        SDL_Surface* ballImage;
-        SDL_Texture* ballImageTexture;
-        SDL_Rect ballImageSourceTexture;
-        SDL_Rect ballImageRenderArea;
+      SDL_Surface* ballImage;
+      SDL_Texture* ballImageTexture;
+      SDL_Rect ballImageSourceTexture;
+      SDL_Rect ballImageRenderArea;
 
-        std::vector<SDL_Rect> levelBlockRenders;
+      std::vector<SDL_Rect> levelBlockRenders;
 
-        Mix_Music* chosenMusic;
+      Mix_Music* chosenMusic;
 
-        LevelDraw* testDraw;
-        GameEngine* testEngine;
+      LevelDraw* testDraw;
+      GameEngine* testEngine;
 };
 #endif

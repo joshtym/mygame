@@ -8,36 +8,39 @@
 
 class MainMenu : public ScreenInterface
 {
-    public:
-        // Constructors
-        MainMenu();
-        MainMenu(Display*);
+   public:
+      // Constructors
+      MainMenu();
+      MainMenu(Display*);
 
-        // Destructor
-        ~MainMenu();
+      // Destructor
+      ~MainMenu();
 
-        // Virtual public funtcion instantiation
-        bool screenDraw();
-    private:
-        // Private functions
-        void initAssets();
-        bool drawParralaxBackground();
+      // Virtual public funtcion instantiation
+      bool screenDraw();
+   private:
+      // Private functions
+      void initAssets();
+      bool drawParralaxBackground();
+      void updateButtonRect(int, int);
 
-        // Private variables
-        Display* display;
-        SDL_Texture* titleTexture;
-        SDL_Texture* gameOption1Texture;
-        SDL_Texture* gameOption2Texture;
-        SDL_Surface* backgroundImage;
-        SDL_Texture* backgroundTexture;
-        SDL_Rect backgroundRect;
-        std::vector<SDL_Rect> backLayer;
-        std::vector<SDL_Rect> middleLayer;
-        std::vector<SDL_Rect> frontLayer;
-        int fps;
-        int counter;
-        int titleHeight, titleWidth;
-        int gameOption1Height, gameOption1Width;
-        int gameOption2Height, gameOption2Width;
+      // Private variables
+      Display* display;
+      SDL_Surface* backgroundImage;
+      SDL_Texture* backgroundTexture;
+      SDL_Rect backgroundRect;
+
+      SDL_Surface* buttonImages[4] = {nullptr};
+      SDL_Texture* buttonTextures[4] = {nullptr};
+      SDL_Rect buttonRects[4];
+      bool buttonActive[4] = {false};
+
+      std::vector<SDL_Rect> backLayer;
+      int fps;
+      int counter;
+      int titleHeight, titleWidth;
+      int gameOption1Height, gameOption1Width;
+      int gameOption2Height, gameOption2Width;
+      bool shift = false;
 };
 #endif

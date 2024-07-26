@@ -23,11 +23,6 @@ class GameScreen : public ScreenInterface
 
         Display* display;
         
-        SDL_Surface* backgroundImage;
-        SDL_Texture* background;
-        SDL_Rect backgroundClip;
-        SDL_Rect backgroundDest;
-        
         SDL_Surface* paddleImage;
         SDL_Texture* paddleImageTexture;
         SDL_Rect paddleImageSourceTexture;

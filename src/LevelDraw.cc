@@ -2,18 +2,18 @@
 
 LevelDraw::LevelDraw()
 {
-    display = nullptr;
+   display = nullptr;
 }
 
 LevelDraw::LevelDraw(Display *givenDisplay, std::string levelFile)
 {
-    display = nullptr;
-    display = givenDisplay;
-    blockRenders.clear();
+   display = nullptr;
+   display = givenDisplay;
+   blockRenders.clear();
 
-    fileName = display->getResourcePath(levelFile);
+   fileName = display->getResourcePath(levelFile);
 
-    init();
+   init();
 }
 
 LevelDraw::~LevelDraw()
@@ -22,63 +22,63 @@ LevelDraw::~LevelDraw()
 
 void LevelDraw::init()
 {
-    blockImage = IMG_Load((display->getResourcePath("Pack/Bricks/brick_blue_small.png")).c_str());
+   blockImage = IMG_Load((display->getResourcePath("bricks/brick_blue_small.png")).c_str());
 
-    // Check for bad loading
-    if (blockImage == NULL)
-        display->displayError(ErrorType::IMAGE_ERROR, "Error loading Image : ");
+   // Check for bad loading
+   if (blockImage == NULL)
+      display->displayError(ErrorType::IMAGE_ERROR, "Error loading Image : ");
 
-    blockTexture = SDL_CreateTextureFromSurface(display->getRenderer(), blockImage);
+   blockTexture = SDL_CreateTextureFromSurface(display->getRenderer(), blockImage);
 
-    blockSourceRect.x = 141;
-    blockSourceRect.y = 178;
-    blockSourceRect.w = 232;
-    blockSourceRect.h = 102;
+   blockSourceRect.x = 141;
+   blockSourceRect.y = 178;
+   blockSourceRect.w = 232;
+   blockSourceRect.h = 102;
 
-    parseXML();
+   parseXML();
 }
 
 void LevelDraw::drawLevel()
 {
-    for (unsigned int i = 0; i != blockRenders.size(); ++i)
-        SDL_RenderCopy(display->getRenderer(), blockTexture, &blockSourceRect, &blockRenders[i]);
+   for (unsigned int i = 0; i != blockRenders.size(); ++i)
+      SDL_RenderCopy(display->getRenderer(), blockTexture, &blockSourceRect, &blockRenders[i]);
 }
 
 std::vector<SDL_Rect> LevelDraw::getBlockRenders()
 {
-    return blockRenders;
+   return blockRenders;
 }
 
 void LevelDraw::setBlockRenders(std::vector<SDL_Rect> updatedBlockRenders)
 {
-    blockRenders.clear();
-    blockRenders = updatedBlockRenders;
+   blockRenders.clear();
+   blockRenders = updatedBlockRenders;
 }
 
 void LevelDraw::parseXML()
 {
-    if (!file.load_file(fileName.c_str()))
-        return;
+   if (!file.load_file(fileName.c_str()))
+      return;
 
-    pugi::xml_node tools = file.child("level");
+   pugi::xml_node tools = file.child("level");
 
-    for (pugi::xml_node_iterator it = tools.begin(); it != tools.end(); ++it)
-    {
-        SDL_Rect tempRect;
+   for (pugi::xml_node_iterator it = tools.begin(); it != tools.end(); ++it)
+   {
+      SDL_Rect tempRect;
 
-        pugi::xml_attribute_iterator ait = it->attributes_begin();
+      pugi::xml_attribute_iterator ait = it->attributes_begin();
 
-        tempRect.x = atoi(ait->value());
-        ++ait;
+      tempRect.x = atoi(ait->value());
+      ++ait;
 
-        tempRect.y = atoi(ait->value());
-        ++ait;
+      tempRect.y = atoi(ait->value());
+      ++ait;
 
-        tempRect.w = atoi(ait->value());
-        ++ait;
+      tempRect.w = atoi(ait->value());
+      ++ait;
 
-        tempRect.h = atoi(ait->value());
+      tempRect.h = atoi(ait->value());
 
-        blockRenders.push_back(tempRect);
-    }
+      blockRenders.push_back(tempRect);
+   }
 }

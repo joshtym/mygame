@@ -30,6 +30,11 @@ class GameScreen : public ScreenInterface
         SDL_Rect paddleImageSourceTexture;
         SDL_Rect paddleImageRenderArea;
 
+        SDL_Surface* ballImage;
+        SDL_Texture* ballImageTexture;
+        SDL_Rect ballImageSourceTexture;
+        SDL_Rect ballImageRenderArea;
+
         Mix_Music* chosenMusic;
 
         LevelDraw* testDraw;

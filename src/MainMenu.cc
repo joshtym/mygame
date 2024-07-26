@@ -84,7 +84,7 @@ void MainMenu::initAssets()
     frontLayer[5].x = 1000;
     frontLayer[5].y = 500;
     
-    fps = 400;
+    fps = 4;
     counter = 0;
 }
 

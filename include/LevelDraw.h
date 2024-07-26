@@ -14,6 +14,8 @@ class LevelDraw
         LevelDraw(Display*, std::string);
         ~LevelDraw();
         void drawLevel();
+        std::vector<SDL_Rect> getBlockRenders();
+        void setBlockRenders(std::vector<SDL_Rect>);
     private:
         void init();
         void parseXML();

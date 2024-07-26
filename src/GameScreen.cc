@@ -1,6 +1,7 @@
+#include <vector>
 #include "GameScreen.h"
 #include "MainMenu.h"
-#include <iostream>
+
 GameScreen::GameScreen()
 {
     display = nullptr;
@@ -19,6 +20,8 @@ GameScreen::GameScreen(Display* givenDisplay)
     backgroundImage = nullptr;
     paddleImage = nullptr;
     paddleImageTexture = nullptr;
+    ballImage = nullptr;
+    ballImageTexture = nullptr;
     initAssets();
 }
 
@@ -41,6 +44,8 @@ bool GameScreen::screenDraw()
     SDL_Event event;
 
     int timerFps = SDL_GetTicks();
+
+    std::vector<SDL_Rect> levelBlockRenders = testDraw->getBlockRenders();
         
     if (SDL_PollEvent(&event))
     {
@@ -107,6 +112,8 @@ bool GameScreen::screenDraw()
         }
     }
     
+    testDraw->setBlockRenders(levelBlockRenders);
+
     // Music jazz
     if (Mix_PlayingMusic() == 0)
         Mix_PlayMusic(chosenMusic, -1);
@@ -114,6 +121,7 @@ bool GameScreen::screenDraw()
     SDL_RenderClear(display->getRenderer());
 
     SDL_RenderCopy(display->getRenderer(), paddleImageTexture, &paddleImageSourceTexture, &paddleImageRenderArea);
+    SDL_RenderCopy(display->getRenderer(), ballImageTexture, &ballImageSourceTexture, &ballImageRenderArea);
     testDraw->drawLevel();
     SDL_RenderPresent(display->getRenderer());
     
@@ -128,13 +136,14 @@ void GameScreen::initAssets()
     // Load our images
     backgroundImage = IMG_Load((display->getResourcePath("breakout_bg.png")).c_str());
     paddleImage = IMG_Load((display->getResourcePath("Pack/Bats/bat_yellow.png")).c_str());
+    ballImage = IMG_Load((display->getResourcePath("Pack/Balls/ball_silverTEST.png")).c_str());
     
     // Check for bad loading
-    if (backgroundImage == NULL || paddleImage == NULL)
+    if (backgroundImage == NULL || paddleImage == NULL || ballImage == NULL)
         display->displayError(ErrorType::IMAGE_ERROR, "Error loading Image : ");
 
     // Load our music
-    chosenMusic = Mix_LoadMUS((display->getResourcePath("ambient-wave-11-stretched.mp3")).c_str());
+    chosenMusic = Mix_LoadMUS((display->getResourcePath("music/ambient-wave-11-stretched.mp3")).c_str());
 
     if (chosenMusic == NULL)
         display->displayError(ErrorType::AUDIO_ERROR, "Error loading Music : ");
@@ -142,6 +151,7 @@ void GameScreen::initAssets()
     // Load our textures
     background = SDL_CreateTextureFromSurface(display->getRenderer(), backgroundImage);
     paddleImageTexture = SDL_CreateTextureFromSurface(display->getRenderer(), paddleImage);
+    ballImageTexture = SDL_CreateTextureFromSurface(display->getRenderer(), ballImage);
     
     SDL_QueryTexture(background, NULL, NULL, &backgroundClip.w, &backgroundClip.h);
     backgroundClip.x = 0;
@@ -156,13 +166,23 @@ void GameScreen::initAssets()
     paddleImageSourceTexture.y = 180;
     paddleImageSourceTexture.w = 463;
     paddleImageSourceTexture.h = 100;
+
+    ballImageSourceTexture.x = 0;
+    ballImageSourceTexture.y = 0;
+    ballImageSourceTexture.w = 367;
+    ballImageSourceTexture.h = 367;
     
     paddleImageRenderArea.x = display->getWidth() / 2 - display->getWidth() / 5 / 2;
     paddleImageRenderArea.y = display->getHeight() - display->getHeight() / 20;
     paddleImageRenderArea.w = display->getWidth() / 5;
     paddleImageRenderArea.h = display->getHeight() / 20;
 
-    testDraw = new LevelDraw(display, "levels/example.lvl");
+    ballImageRenderArea.x = paddleImageRenderArea.x + paddleImageRenderArea.w / 2;
+    ballImageRenderArea.w = paddleImageRenderArea.w / 10;
+    ballImageRenderArea.h = ballImageRenderArea.w;
+    ballImageRenderArea.y = paddleImageRenderArea.y - ballImageRenderArea.w;
+
+    testDraw = new LevelDraw(display, "levels/level.lvl");
 }
 
 void GameScreen::handleResizeEvent()

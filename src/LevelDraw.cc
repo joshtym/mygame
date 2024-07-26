@@ -44,6 +44,17 @@ void LevelDraw::drawLevel()
         SDL_RenderCopy(display->getRenderer(), blockTexture, &blockSourceRect, &blockRenders[i]);
 }
 
+std::vector<SDL_Rect> LevelDraw::getBlockRenders()
+{
+    return blockRenders;
+}
+
+void LevelDraw::setBlockRenders(std::vector<SDL_Rect> updatedBlockRenders)
+{
+    blockRenders.clear();
+    blockRenders = updatedBlockRenders;
+}
+
 void LevelDraw::parseXML()
 {
     if (!file.load_file(fileName.c_str()))

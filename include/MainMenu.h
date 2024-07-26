@@ -9,11 +9,17 @@
 class MainMenu : public ScreenInterface
 {
     public:
+        // Constructors
         MainMenu();
         MainMenu(Display*);
+
+        // Destructor
         ~MainMenu();
+
+        // Virtual public funtcion instantiation
         bool screenDraw();
     private:
+        // Private functions
         void initAssets();
         bool drawParralaxBackground();
         Display* display;

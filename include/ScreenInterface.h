@@ -3,9 +3,9 @@
 
 class ScreenInterface
 {
-	public:
-		virtual ~ScreenInterface() {}
-		virtual bool screenDraw() = 0;
+    public:
+        virtual ~ScreenInterface() {}
+        virtual bool screenDraw() = 0;
 };
 
 #endif

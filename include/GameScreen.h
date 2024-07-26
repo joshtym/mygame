@@ -7,19 +7,24 @@
 
 class GameScreen : public ScreenInterface
 {
-	public:
-		GameScreen();
-		GameScreen(Display*);
-		~GameScreen();
-		bool screenDraw();
-	private:
-		void initAssets();
-		void handleResizeEvent();
-		Display* display;
-		SDL_Texture* background;
-		SDL_Surface* image;
-		SDL_Surface* paddleImage;
-		SDL_Texture* paddleImageTexture;
-		SDL_Rect paddleImageRenderArea;
+    public:
+        GameScreen();
+        GameScreen(Display*);
+        ~GameScreen();
+        bool screenDraw();
+    private:
+        void initAssets();
+        void handleResizeEvent();
+        Display* display;
+        
+        SDL_Surface* backgroundImage;
+        SDL_Texture* background;
+        SDL_Rect backgroundClip;
+        SDL_Rect backgroundDest;
+        
+        SDL_Surface* paddleImage;
+        SDL_Texture* paddleImageTexture;
+        SDL_Rect paddleImageSourceTexture;
+        SDL_Rect paddleImageRenderArea;
 };
 #endif

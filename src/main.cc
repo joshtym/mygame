@@ -12,33 +12,20 @@
  * @param x The x coordinate to draw too
  * @param y The y coordinate to draw too
  * @param clip The sub-section of the texture to draw (clipping rect)
- *		default of nullptr draws the entire texture
+ *        default of nullptr draws the entire texture
  */
 
 
 int main(int argc, char **argv)
 {
-	Display testDisplay(600, 500);
-	
-	if (!(testDisplay.initDisplay()))
-		return 1;
-	
-	while (true)
-	{
-		if (!(testDisplay.drawScreen()))
-			break;
-		
-		/*SDL_Event event;
-		
-		if (SDL_PollEvent(&event))
-		{
-			if (event.type == SDL_QUIT)
-				break;
-				
-			if ((event.type == SDL_KEYDOWN) && (event.key.keysym.sym == SDLK_ESCAPE))
-				break;
-		}*/
-	}
-	
-	return 0;
+    Display testDisplay(800, 600);
+    
+    if (!(testDisplay.initDisplay()))
+        return 1;
+    
+    while (true)
+        if (!(testDisplay.drawScreen()))
+            break;
+    
+    return 0;
 }

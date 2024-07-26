@@ -344,13 +344,17 @@ bool Display::initLibraries()
 */
 void Display::printOutErrorMessage(ErrorType error, std::string message)
 {
+    // Some Variables
+    std::string errorMessage = SDL_GetError();
+    std::string fullMessage = message + errorMessage;
+
     // Print correct error message
     if (error == ErrorType::SDL_ERROR)
-        std::cout << message << SDL_GetError() << std::endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Display Error", fullMessage.c_str(), NULL);
     else if (error == ErrorType::TTF_ERROR)
-        std::cout << message << TTF_GetError() << std::endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Font Error", fullMessage.c_str(), NULL);
     else if (error == ErrorType::IMAGE_ERROR)
-        std::cout << message << IMG_GetError() << std::endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Image Error", fullMessage.c_str(), NULL);
     else if (error == ErrorType::AUDIO_ERROR)
-        std::cout << message << Mix_GetError() << std::endl;
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Audio Error", fullMessage.c_str(), NULL);
 }
